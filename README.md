@@ -1,3 +1,25 @@
+#Link PDF do relatorio: 
+[Andre_Lima_atividade_2.pdf](https://github.com/user-attachments/files/16859284/Andre_Lima_atividade_2.pdf)
+
+#Comandos utilizados no tutorial:
+
+python -m venv venv
+
+venv\Scripts\activate
+
+pip install -r requirements.txt
+
+pip install mutmut
+
+python -m pytest --cov=orders --cov-branch
+
+mutmut run --paths-to-mutate "/Users/andre_lima/Desktop/shopping-cart-unit-tests-main/shopping_cart" --tests-dir "/Users/andre_lima/Desktop/shopping-cart-unit-tests-main/shopping_cart/tests"
+
+mutmut results
+
+mutmut html
+
+
 # Shopping Cart Unit Tests
 
 This repository contains the example code for Chapter 5 in Andrew Knight's book, *The Way To Test Software*.
