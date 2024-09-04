@@ -1,0 +1,34 @@
+<html><body><h1>G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py</h1>Killed 62 out of 65 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 16</h3><pre>--- G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
++++ G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
+@@ -15,7 +15,7 @@
+         raise ValueError('tax_percent cannot be negative')
+ 
+     amount = subtotal + shipping - discount
+-    if amount < 0:
++    if amount <= 0:
+         total = 0
+     else:
+         total = amount * (1 + tax_percent)
+</pre><h3>Mutant 32</h3><pre>--- G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
++++ G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
+@@ -36,7 +36,7 @@
+ 
+     def calculate_item_total(self):
+         total = self.quantity * self.unit_price
+-        rounded = round(total, 2)
++        rounded = round(total, 3)
+         return rounded
+ 
+ 
+</pre><h3>Mutant 54</h3><pre>--- G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
++++ G:\Documentos\GitHub\Teste_Software_Mutantes_2024_Lima_Andre\shopping_cart\orders.py
+@@ -79,7 +79,7 @@
+ 
+ class DynamicallyPricedItem:
+     def __init__(self, id, quantity=1):
+-        self.id = id
++        self.id = None
+         self.quantity = quantity
+ 
+     def get_latest_price(self):
+</pre></body></html>

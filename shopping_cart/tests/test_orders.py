@@ -156,3 +156,156 @@ def test_DynamicallyPricedItem_calculate_item_total(
     item = DynamicallyPricedItem(12345, quantity)
     mocker.patch.object(item, 'get_latest_price', return_value=unit_price)
     assert expected == item.calculate_item_total()
+
+
+
+def test_DynamicallyPricedItem_get_latest_price_invalid_endpoint_operation_mut(mocker):
+    item = DynamicallyPricedItem(12345)
+    
+   
+    mocker.patch('requests.get', side_effect=TypeError)
+
+    
+    with pytest.raises(TypeError):
+        item.get_latest_price()
+
+def test_DynamicallyPricedItem_get_latest_price_none_endpoint_mut_mut(mocker):
+    item = DynamicallyPricedItem(12345)
+    
+    
+    mocker.patch('requests.get', side_effect=TypeError)
+
+    
+    with pytest.raises(TypeError):
+        item.get_latest_price()
+
+def test_DynamicallyPricedItem_get_latest_price_none_response_mut(mocker):
+    item = DynamicallyPricedItem(12345)
+    
+    
+    mocker.patch('requests.get', return_value=None)
+    
+    
+    with pytest.raises(AttributeError):
+        item.get_latest_price()
+
+def test_DynamicallyPricedItem_get_latest_price_none_price_mut(mocker):
+    item = DynamicallyPricedItem(12345)
+    
+    
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {'price': None}
+    mocker.patch('requests.get', return_value=mock_response)
+    
+    
+    price = item.get_latest_price()
+    assert price is None  
+
+
+def test_DynamicallyPricedItem_get_latest_price_invalid_json_key_mut(mocker):
+    item = DynamicallyPricedItem(12345)
+    
+    mock_response = mocker.Mock()
+    mock_response.json.return_value = {'XXpriceXX': 100.0}
+    mocker.patch('requests.get', return_value=mock_response)
+    
+    with pytest.raises(KeyError):
+        item.get_latest_price()
+
+def test_calculate_total_amount_zero_mut():
+
+    subtotal = 10
+    shipping = 5
+    discount = 15  
+    tax_percent = 0.05
+
+
+    assert calculate_total(subtotal, shipping, discount, tax_percent) == 0
+
+
+def test_calculate_total_amount_just_above_zero_mut():
+    subtotal = 10
+    shipping = 5
+    discount = 14.5  
+    tax_percent = 0.05
+
+    expected_total = 0.5 * (1 + tax_percent)
+    
+    
+    assert calculate_total(subtotal, shipping, discount, tax_percent) == pytest.approx(expected_total, 0.01)
+
+def test_order_default_shipping_mut():
+    order = Order()
+    
+    
+    assert order.shipping == 0
+
+
+def test_order_default_discount_mut():
+    
+    order = Order()
+    
+    assert order.discount == 0
+
+def test_order_default_tax_percent_mut():
+    
+    order = Order()
+    
+    assert order.tax_percent == 0
+
+def test_dynamically_priced_item_default_quantity_mut():
+
+    item = DynamicallyPricedItem(12345)
+    
+    
+    assert item.quantity == 1
+
+def test_dynamically_priced_item_id_none_mut(mocker):
+    
+    mock_get = mocker.patch('requests.get')
+    mock_get.return_value.json.return_value = {'price': 0}
+
+    
+    item = DynamicallyPricedItem(None)
+    
+   
+    item.get_latest_price()
+    mock_get.assert_called_once_with('https://api.pandastore.com/getitem/None')
+
+    assert mock_get.call_count == 1
+    assert mock_get.call_args[0][0] == 'https://api.pandastore.com/getitem/None'
+
+
+def test_calculate_total_amount_zero_mut():
+  
+    subtotal = 10
+    shipping = 5
+    discount = 15  
+    tax_percent = 0.05
+
+    assert calculate_total(subtotal, shipping, discount, tax_percent) == 0
+
+def test_dynamically_priced_item_id_none_behavior_mut(mocker):
+    
+    mock_get = mocker.patch('requests.get')
+
+    item = DynamicallyPricedItem(None)
+
+    item.get_latest_price()
+
+    mock_get.assert_called_once_with('https://api.pandastore.com/getitem/None')
+
+    with pytest.raises(TypeError):
+        if mock_get.call_args[0][0] == 'https://api.pandastore.com/getitem/None':
+            raise TypeError("Invalid ID type resulting in malformation of URL")
+
+
+def test_calculate_item_total_rounding():
+    item = DynamicallyPricedItem(12345, 1)
+
+    mock_price = 12.34567 
+    item.get_latest_price = lambda: mock_price
+
+
+    expected_total = round(mock_price, 2)
+    assert item.calculate_item_total() == expected_total
